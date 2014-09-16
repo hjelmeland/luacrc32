@@ -3,12 +3,13 @@ package = "crc32"
 version = "1.0-1"
 
 source = {
-	url = "https://github.com/hjelmeland/luacrc32",
+	url = "git://github.com/hjelmeland/luacrc32",
+	tag = "1.0",
 }
 
 description = {
-	summary = "CRC32 module implemented in C",
-	license = "MIT/X11",
+	summary = "CRC-32 module implemented in C",
+	license = "MIT",
 	homepage = "https://github.com/hjelmeland/luacrc32",
 }
 
