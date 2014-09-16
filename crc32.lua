@@ -1,4 +1,11 @@
-local  crc32lua = require 'crc32lua'
+local require,setmetatable,string,table,type
+    = require,setmetatable,string,table,type
+--[[ A pure Lua implementation of the crc32.so API. Uses 
+-- https://github.com/davidm/lua-digest-crc32lua/blob/master/lmod/digest/crc32lua.lua
+-- for the CRC-32 calcuation
+]]
+
+local crc32lua = require 'crc32lua'
 local bit = require'bit32'
 local band = bit.band
 local bor = bit.bor
@@ -39,7 +46,7 @@ return {
 	crc32 = function (crc, data)
 	
 		if type(crc) == 'string' then
-			crc_len=#crc
+			local crc_len=#crc
 			if crc_len>4 then crc_len = 4 end
 			local crc_in = 0;
 			for i =  1, crc_len do
