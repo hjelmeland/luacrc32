@@ -148,7 +148,7 @@ static void create_meta(lua_State *L, const char *name, const luaL_reg *lib) {
 static int Lcrc_reset(lua_State *L) {
 	uint32_t *_crc32 = (uint32_t*) luaL_checkudata(L, 1, crc32_reg_name);
 	*_crc32 = 0;
-	lua_pop (L, lua_gettop(L)-1); // pop data, return userdata itself
+	lua_settop(L, 1); //  return userdata itself
 	return 1;
 }
 static int Lcrc_update(lua_State *L) {
@@ -159,7 +159,7 @@ static int Lcrc_update(lua_State *L) {
 	luaL_checktype(L, 2, LUA_TSTRING);
 	data = lua_tolstring (L, 2, &data_len);
 	*_crc32 = crc32(*_crc32, data, data_len );
-	lua_pop (L, lua_gettop(L)-1); // pop data, return userdata itself
+	lua_settop(L, 1); //  return userdata itself
 	return 1;
 }
 
