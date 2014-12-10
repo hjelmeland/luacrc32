@@ -1,7 +1,9 @@
 LUA_INCLUDE = /usr/include/lua5.1
 
 CC	?= gcc
+CFLAGS1	= -fPIC
 CFLAGS	?= -I . -I $(LUA_INCLUDE)
+LDFLAGS1	= -shared
 LDFLAGS	?=
 STRIP	?= $(CROSS_COMPILE)strip
 
@@ -29,14 +31,12 @@ clean:
 	rm -f $(OBJS) $(TARGET) 
 
 $(TARGET): $(OBJS)
-	$(CC) -shared -fPIC $(LDFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
+	$(CC) $(LDFLAGS1) $(LDFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 	$(STRIP) $(TARGET)
 
 .c.o:
-	$(CC) -fPIC $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS1) $(CFLAGS) -c $< -o $@
 
 install:
 	$(INSTALL_DIR) $(DESTDIR)$(lualibdir)
-	$(INSTALL_DIR) $(DESTDIR)$(luaincludedir)
 	$(INSTALL_DATA) $(TARGET) $(DESTDIR)$(lualibdir)
-	$(INSTALL_DATA) $(HEADER) $(DESTDIR)$(luaincludedir)
