@@ -2,13 +2,7 @@
 local _G,arg,assert,getmetatable,package,require,string,type
     = _G,arg,assert,getmetatable,package,require,string,type
 
-local save_path = package.path
-if arg[1] == nil then
-	package.path = '' -- force loading crc32.so
-end -- else load the crc32.lua
-
 local C32 = require'crc32'
-package.path = save_path
 
 assert(_G.crc32==nil, 'do not pollute global env')
 assert(type(C32.version)=='string')
