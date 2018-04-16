@@ -1,6 +1,6 @@
 Lua module for CRC-32 calculation implemented in C. 
 
-It is only tested with Lua 5.1.
+Tested with Lua 5.1, 5.2 and 5.3.
 
 Also included is a pure Lua implementation of the same API, using
 https://github.com/davidm/lua-digest-crc32lua.
