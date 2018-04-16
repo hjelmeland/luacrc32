@@ -1,0 +1,5 @@
+lua-crc32 (1.1-1) unstable; urgency=medium
+
+  * Initial packaging
+
+ -- Egil Hjelmeland <privat@egil-hjelmeland.no>  Mon, 16 Apr 2018 14:57:46 +0100
