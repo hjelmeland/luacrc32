@@ -6,7 +6,7 @@
 
 #define VERSION "1.00"
 
-
+#if LUA_VERSION_NUM < 502
 /* -----copied from bit32.c: ----- */
 
 /* ----- adapted from lua-5.2.0 luaconf.h: ----- */
@@ -88,6 +88,9 @@ union luai_Cast2 { double l_d; LUAI_INT32 l_p[2]; };
 
 #endif                          /* } */
 
+#endif
+#if LUA_VERSION_NUM != 502
+
 #if !defined(lua_number2unsigned)       /* { */
 /* the following definition assures proper modulo behavior */
 #if defined(LUA_NUMBER_DOUBLE)
@@ -125,6 +128,7 @@ static lua_Unsigned luaL_checkunsigned (lua_State *L, int arg) {
 
 /* -----End of copied from bit32.c ----- */
 
+#endif
 
 
 #include "crc32.h"
@@ -132,14 +136,18 @@ static lua_Unsigned luaL_checkunsigned (lua_State *L, int arg) {
 
 static const char *crc32_reg_name      = "ehj.crc32";
 
-static void create_meta(lua_State *L, const char *name, const luaL_reg *lib) {
+static void create_meta(lua_State *L, const char *name, const luaL_Reg *lib) {
 	luaL_newmetatable(L, name);
 	lua_pushstring(L, "__index");
 	lua_pushvalue(L, -2);               /* push metatable */
 	lua_rawset(L, -3);                  /* metatable.__index = metatable */
 
 	/* register metatable functions */
+#if LUA_VERSION_NUM < 502
 	luaL_register(L, NULL, lib);
+#else
+	luaL_setfuncs(L, lib, 0);
+#endif
 
 	/* remove metatable from stack */
 	lua_pop(L, 1);
@@ -192,7 +200,7 @@ static int Lcrc_tohex(lua_State *L) {
 	return 1;
 }
 
-static const luaL_reg crc32_meta_reg[] = {
+static const luaL_Reg crc32_meta_reg[] = {
 	{"reset",      Lcrc_reset    },
 	{"update",     Lcrc_update   },
 	{"tonumber",   Lcrc_tonumber },
@@ -250,14 +258,18 @@ static int Lnewcrc32(lua_State *L) {
 		lua_rawset(L, -3);                  /* metatable.__index = metatable */
 
 		/* register metatable functions */
+#if LUA_VERSION_NUM < 502
 		luaL_register(L, NULL, crc32_meta_reg);
+#else
+		luaL_setfuncs(L, crc32_meta_reg, 0);
+#endif
 	}
 	lua_setmetatable(L, -2);
 	*crc32 = 0;
 	return 1;
 }
 
-static const luaL_reg Rcrc32[] = {
+static const luaL_Reg Rcrc32[] = {
 	{"crc32",     Lcrc32     },
 	{"newcrc32",  Lnewcrc32  },
 	{NULL, NULL}
@@ -266,8 +278,12 @@ static const luaL_reg Rcrc32[] = {
 LUALIB_API int luaopen_crc32(lua_State *L) {
 	create_meta(L,crc32_reg_name, crc32_meta_reg);
 	
+#if LUA_VERSION_NUM < 502
 	lua_newtable (L);
 	luaL_register(L, NULL, Rcrc32);
+#else
+	luaL_newlib(L, Rcrc32);
+#endif
 
 	lua_pushliteral(L, VERSION);
 	lua_setfield(L, -2, "version");
